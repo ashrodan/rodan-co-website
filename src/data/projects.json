@@ -1,12 +1,17 @@
 [
   {
     "title": "Wein Mediation",
-    "description": "Description for project one.",
+    "description": "Professional website for Alan Wein at Wein mediation.",
     "image": "/projects/wein-mediation.png"
   },
   {
     "title": "Lilian Rodan",
-    "description": "Description for project two.",
+    "description": "Professional website for counselor Lilian Rodan.",
     "image": "/projects/lilian-rodan.png"
+  },
+  {
+    "title": "DCA - Donor Caller App",
+    "description": "Assiting NFPs getting the most out of their calling campaigns/giving days.",
+    "image": "/projects/dca.png"
   }
 ]
