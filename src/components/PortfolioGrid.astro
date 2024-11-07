@@ -13,6 +13,7 @@ import projects from '../data/projects.json';
         class="project-card absolute w-64 md:w-72 bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl border border-teal-500/20 transition-all duration-500 hover:scale-105 cursor-pointer"
         data-index={index}
         data-total={projects.length}
+        data-project={JSON.stringify(project)}
       >
         <div class="aspect-video overflow-hidden">
           <img 
@@ -79,13 +80,31 @@ function initMobileLayout() {
   }
 }
 
+// Add click handlers for project cards
+function initProjectCards() {
+  const cards = document.querySelectorAll('.project-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const projectData = card.getAttribute('data-project');
+      if (projectData) {
+        const project = JSON.parse(projectData);
+        const event = new CustomEvent('projectSelected', { detail: project });
+        document.dispatchEvent(event);
+      }
+    });
+  });
+}
+
 let resizeTimeout: number;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(initMobileLayout, 100) as unknown as number;
 });
 
-document.addEventListener('DOMContentLoaded', initMobileLayout);
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileLayout();
+  initProjectCards();
+});
 </script>
 
 <style>

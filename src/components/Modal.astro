@@ -1,12 +1,88 @@
 ---
-const { isOpen, selectedProject, closeModal } = Astro.props;
+interface Props {
+  isOpen?: boolean;
+  selectedProject?: {
+    title: string;
+    description: string;
+    image: string;
+  } | null;
+}
+
+const { isOpen = false, selectedProject = null } = Astro.props;
 ---
-<div class={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+<div 
+  data-modal
+  class={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+>
   {selectedProject && (
-    <div class="bg-white p-6 rounded-lg max-w-lg w-full">
-    <button class="absolute top-2 right-2" onClick={closeModal}>Close</button>
-    <h2 class="text-2xl font-bold">{selectedProject.title}</h2>
-    <p class="mt-4">{selectedProject.description}</p>
+    <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-lg w-full m-4 relative">
+      <button 
+        onclick="document.dispatchEvent(new CustomEvent('closeModal'))"
+        class="absolute top-4 right-4 text-white/70 hover:text-white"
+      >
+        ✕
+      </button>
+      <img 
+        src={selectedProject.image} 
+        alt={selectedProject.title}
+        class="w-full aspect-video object-cover rounded-lg mb-4"
+      />
+      <h2 class="text-2xl font-bold text-white mb-4">{selectedProject.title}</h2>
+      <p class="text-white/70">{selectedProject.description}</p>
     </div>
   )}
 </div>
+
+<script>
+  const modal = document.querySelector('[data-modal]');
+  
+  function updateModal() {
+    if (!modal) return;
+    
+    const isOpen = modal.getAttribute('data-open') === 'true';
+    const projectData = modal.getAttribute('data-project');
+    const project = projectData ? JSON.parse(projectData) : null;
+    
+    modal.classList.toggle('opacity-0', !isOpen);
+    modal.classList.toggle('pointer-events-none', !isOpen);
+    
+    if (project) {
+      modal.innerHTML = `
+        <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-lg w-full m-4 relative">
+          <button 
+            onclick="document.dispatchEvent(new CustomEvent('closeModal'))"
+            class="absolute top-4 right-4 text-white/70 hover:text-white"
+          >
+            ✕
+          </button>
+          <img 
+            src="${project.image}" 
+            alt="${project.title}"
+            class="w-full aspect-video object-cover rounded-lg mb-4"
+          />
+          <h2 class="text-2xl font-bold text-white mb-4">${project.title}</h2>
+          <p class="text-white/70">${project.description}</p>
+        </div>
+      `;
+    } else {
+      modal.innerHTML = '';
+    }
+  }
+
+  // Watch for attribute changes
+  const observer = new MutationObserver(updateModal);
+  if (modal) {
+    observer.observe(modal, { 
+      attributes: true, 
+      attributeFilter: ['data-open', 'data-project'] 
+    });
+  }
+
+  // Handle close event
+  document.addEventListener('closeModal', () => {
+    if (modal) {
+      modal.setAttribute('data-open', 'false');
+      modal.setAttribute('data-project', '');
+    }
+  });
+</script>

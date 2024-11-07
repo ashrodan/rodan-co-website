@@ -4,6 +4,12 @@ import ContactCard from '../components/ContactCard.astro';
 import PortfolioGrid from '../components/PortfolioGrid.astro';
 import Modal from '../components/Modal.astro';
 import StarTrail from '../components/StarTrail.astro';
+
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+}
 ---
 
 <!DOCTYPE html>
@@ -24,13 +30,47 @@ import StarTrail from '../components/StarTrail.astro';
           <ContactCard />
         </div>
         <PortfolioGrid />
-        <Modal />
+        <Modal isOpen={false} selectedProject={null} />
       </div>
     </main>
 
     <script>
       // Disable pull-to-refresh on mobile
       document.body.style.overscrollBehavior = 'none';
+
+      interface Project {
+        title: string;
+        description: string;
+        image: string;
+      }
+
+      // Modal state management
+      let modalOpen = false;
+      let selectedProject: Project | null = null;
+      const modalElement = document.querySelector('[data-modal]');
+
+      document.addEventListener('projectSelected', ((event: Event) => {
+        const customEvent = event as CustomEvent<Project>;
+        selectedProject = customEvent.detail;
+        modalOpen = true;
+        updateModalState();
+      }) as EventListener);
+
+      function closeModal() {
+        modalOpen = false;
+        selectedProject = null;
+        updateModalState();
+      }
+
+      function updateModalState() {
+        if (modalElement) {
+          modalElement.setAttribute('data-open', modalOpen.toString());
+          modalElement.setAttribute('data-project', JSON.stringify(selectedProject));
+        }
+      }
+
+      // Handle close event
+      document.addEventListener('closeModal', closeModal);
     </script>
   </body>
 </html>
