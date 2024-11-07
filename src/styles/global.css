@@ -1,3 +1,97 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes aurora {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  25% {
+    transform: translate3d(10px, 10px, 0) rotate(1deg);
+  }
+  50% {
+    transform: translate3d(0, 20px, 0) rotate(0);
+  }
+  75% {
+    transform: translate3d(-10px, 10px, 0) rotate(-1deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.8; }
+}
+
+@layer base {
+  html, body {
+    @apply h-full m-0 p-0;
+  }
+
+  body {
+    @apply min-h-screen relative overflow-x-hidden bg-[#0B1026] text-white;
+  }
+
+  body::before,
+  body::after,
+  .aurora-layer-1,
+  .aurora-layer-2 {
+    @apply content-[''] fixed inset-0 pointer-events-none opacity-60;
+    mix-blend-mode: screen;
+  }
+
+  body::before {
+    background: linear-gradient(
+      45deg,
+      rgba(0, 255, 170, 0.3) 0%,
+      rgba(0, 255, 255, 0.3) 50%,
+      rgba(100, 180, 255, 0.3) 100%
+    );
+    animation: aurora 12s infinite ease-in-out;
+  }
+
+  body::after {
+    background: 
+      radial-gradient(circle at 50% -20%, 
+        rgba(76, 255, 168, 0.4) 0%, 
+        rgba(28, 99, 242, 0.3) 40%, 
+        rgba(15, 21, 89, 0.2) 80%
+      );
+    animation: aurora 15s infinite ease-in-out reverse;
+  }
+}
+
+@layer components {
+  .aurora-beam {
+    @apply fixed inset-0 pointer-events-none;
+    animation: glow 8s infinite ease-in-out;
+  }
+
+  .aurora-beam::before {
+    @apply content-[''] absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 255, 170, 0) 0%,
+      rgba(0, 255, 170, 0.4) 45%,
+      rgba(0, 255, 170, 0.4) 55%,
+      rgba(0, 255, 170, 0) 100%
+    );
+    animation: aurora 20s infinite ease-in-out;
+    transform-origin: center;
+  }
+
+  .aurora-beam::after {
+    @apply content-[''] absolute inset-0;
+    background: linear-gradient(
+      45deg,
+      rgba(76, 255, 168, 0) 0%,
+      rgba(76, 255, 168, 0.3) 45%,
+      rgba(28, 99, 242, 0.3) 55%,
+      rgba(28, 99, 242, 0) 100%
+    );
+    animation: aurora 25s infinite ease-in-out reverse;
+    transform-origin: center;
+  }
+}

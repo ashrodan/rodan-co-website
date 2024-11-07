@@ -1,19 +1,29 @@
 ---
 import '../styles/global.css';
-import Opener from '../components/Opener.astro';
+import ContactCard from '../components/ContactCard.astro';
 import PortfolioGrid from '../components/PortfolioGrid.astro';
 import Modal from '../components/Modal.astro';
 ---
 
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="h-full">
   <head>
-    <title>Ashley Rodan - Portfolio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Welcome to Ashley Rodan's personal website. Explore my projects and learn more about me." />
     <meta name="keywords" content="Ashley Rodan, Portfolio, Web Developer, Projects" />
+    <title>Ashley Rodan - Portfolio</title>
   </head>
-  <body>
-    <Opener />
-    <PortfolioGrid />
-    <Modal />
+  <body class="min-h-full">
+    <div class="aurora-beam"></div>
+    <main class="relative z-10 min-h-screen">
+      <div class="container mx-auto px-4 py-12 md:py-24 space-y-16">
+        <div class="max-w-4xl mx-auto">
+          <ContactCard />
+        </div>
+        <PortfolioGrid />
+        <Modal />
+      </div>
+    </main>
   </body>
 </html>
