@@ -1,16 +1,15 @@
 ---
-
+import { Head } from '@astrojs/head';
+import Opener from '../components/Opener.astro';
+import PortfolioGrid from '../components/PortfolioGrid.astro';
+import Modal from '../components/Modal.astro';
 ---
+<Head>
+  <title>Ashley Rodan - Portfolio</title>
+  <meta name="description" content="Welcome to Ashley Rodan's personal website. Explore my projects and learn more about me." />
+  <meta name="keywords" content="Ashley Rodan, Portfolio, Web Developer, Projects" />
+</Head>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Opener />
+<PortfolioGrid />
+<Modal />
