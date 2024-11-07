@@ -26,23 +26,36 @@
 }
 
 @layer base {
-  html, body {
+  html {
     @apply h-full m-0 p-0;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
   }
 
   body {
-    @apply min-h-screen relative overflow-x-hidden bg-[#0B1026] text-white;
+    @apply min-h-screen relative bg-[#0B1026] text-white;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  body::before,
-  body::after,
-  .aurora-layer-1,
-  .aurora-layer-2 {
-    @apply content-[''] fixed inset-0 pointer-events-none opacity-60;
+  main {
+    @apply relative z-10;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Aurora effects wrapper */
+  .aurora-wrapper {
+    @apply fixed inset-0 overflow-hidden pointer-events-none;
+    z-index: 1;
+  }
+
+  /* Base aurora effect styles */
+  .aurora-base {
+    @apply absolute inset-0 pointer-events-none opacity-60;
     mix-blend-mode: screen;
   }
 
-  body::before {
+  .aurora-primary {
     background: linear-gradient(
       45deg,
       rgba(0, 255, 170, 0.3) 0%,
@@ -52,7 +65,7 @@
     animation: aurora 12s infinite ease-in-out;
   }
 
-  body::after {
+  .aurora-secondary {
     background: 
       radial-gradient(circle at 50% -20%, 
         rgba(76, 255, 168, 0.4) 0%, 
@@ -65,12 +78,12 @@
 
 @layer components {
   .aurora-beam {
-    @apply fixed inset-0 pointer-events-none;
+    @apply absolute inset-0 pointer-events-none;
     animation: glow 8s infinite ease-in-out;
   }
 
   .aurora-beam::before {
-    @apply content-[''] absolute inset-0;
+    @apply content-[''] absolute inset-0 pointer-events-none;
     background: linear-gradient(
       90deg,
       rgba(0, 255, 170, 0) 0%,
@@ -83,7 +96,7 @@
   }
 
   .aurora-beam::after {
-    @apply content-[''] absolute inset-0;
+    @apply content-[''] absolute inset-0 pointer-events-none;
     background: linear-gradient(
       45deg,
       rgba(76, 255, 168, 0) 0%,
@@ -93,5 +106,12 @@
     );
     animation: aurora 25s infinite ease-in-out reverse;
     transform-origin: center;
+  }
+}
+
+/* Additional utility classes for content positioning */
+@layer utilities {
+  .content-wrapper {
+    @apply relative z-20;
   }
 }

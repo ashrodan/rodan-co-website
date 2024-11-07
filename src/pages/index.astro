@@ -40,10 +40,10 @@ interface Project {
     <meta name="twitter:image" content={new URL('/ar-profile.jpeg', Astro.url)} />
     <meta name="twitter:image:alt" content="Ashley Rodan" />
   </head>
-  <body class="min-h-full">
+  <body>
     <StarTrail />
     <div class="aurora-beam"></div>
-    <main class="relative z-10 min-h-screen">
+    <main class="relative z-10">
       <div class="container mx-auto px-4 py-12 md:py-24">
         <div class="max-w-4xl mx-auto mb-24">
           <ContactCard />
@@ -54,9 +54,6 @@ interface Project {
     </main>
 
     <script>
-      // Disable pull-to-refresh on mobile
-      document.body.style.overscrollBehavior = 'none';
-
       interface Project {
         title: string;
         description: string;

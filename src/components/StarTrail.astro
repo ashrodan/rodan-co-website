@@ -113,11 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastY = 0;
   let isMoving = false;
   let moveTimeout: number;
+  
+  // Add touch detection
+  const isTouchDevice = () => {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  };
+  const isTouch = isTouchDevice();
 
   const resize = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    // Recreate background stars on resize
     backgroundStars = createBackgroundStars();
   };
 
@@ -142,6 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const createTrailStars = (x: number, y: number, count: number) => {
+    // Only create trail stars if not on touch device
+    if (isTouch) return;
+    
     for (let i = 0; i < count; i++) {
       const spread = isMoving ? 40 : 20;
       const offsetX = (Math.random() - 0.5) * spread;
@@ -151,52 +159,64 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const animate = () => {
-    // Apply fade effect
     ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Update and draw background stars
     backgroundStars.forEach(star => {
-      star.update(mouseX, mouseY);
+      // Only do mouse interaction if not on touch device
+      if (!isTouch) {
+        star.update(mouseX, mouseY);
+      } else {
+        // For touch devices, just keep stars in their original positions
+        star.update(star.baseX, star.baseY);
+      }
       star.draw(ctx);
     });
 
-    // Create trail stars based on mouse movement
-    if (Math.abs(mouseX - lastX) > 1 || Math.abs(mouseY - lastY) > 1) {
-      createTrailStars(mouseX, mouseY, isMoving ? 5 : 2);
-      lastX = mouseX;
-      lastY = mouseY;
-      isMoving = true;
-      clearTimeout(moveTimeout);
-      moveTimeout = setTimeout(() => {
-        isMoving = false;
-      }, 100) as unknown as number;
+    // Only handle trail stars if not on touch device
+    if (!isTouch) {
+      // Create trail stars based on mouse movement
+      if (Math.abs(mouseX - lastX) > 1 || Math.abs(mouseY - lastY) > 1) {
+        createTrailStars(mouseX, mouseY, isMoving ? 5 : 2);
+        lastX = mouseX;
+        lastY = mouseY;
+        isMoving = true;
+        clearTimeout(moveTimeout);
+        moveTimeout = setTimeout(() => {
+          isMoving = false;
+        }, 100) as unknown as number;
+      }
+
+      // Update and draw trail stars
+      trailStars = trailStars.filter(star => {
+        star.update(mouseX, mouseY);
+        star.draw(ctx);
+        return star.opacity > 0 && star.size > 0;
+      });
     }
-
-    // Update and draw trail stars
-    trailStars = trailStars.filter(star => {
-      star.update(mouseX, mouseY);
-      star.draw(ctx);
-      return star.opacity > 0 && star.size > 0;
-    });
 
     requestAnimationFrame(animate);
   };
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+  // Only add mouse events if not on touch device
+  if (!isTouch) {
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+  }
 
-  // Touch support
-  document.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    mouseX = e.touches[0].clientX;
-    mouseY = e.touches[0].clientY;
-  }, { passive: false });
+  // Remove touch event listener completely
+  // document.addEventListener('touchmove', (e) => {
+  //   e.preventDefault();
+  //   mouseX = e.touches[0].clientX;
+  //   mouseY = e.touches[0].clientY;
+  // }, { passive: false });
 
   init();
   backgroundStars = createBackgroundStars();
   animate();
 });
 </script>
+
