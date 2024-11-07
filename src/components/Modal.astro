@@ -15,7 +15,7 @@ const { isOpen = false, selectedProject = null } = Astro.props;
   class={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
 >
   {selectedProject && (
-    <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-lg w-full m-4 relative">
+    <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-[90vw] w-auto m-4 relative">
       <button 
         onclick="document.dispatchEvent(new CustomEvent('closeModal'))"
         class="absolute top-4 right-4 text-white/70 hover:text-white"
@@ -25,7 +25,7 @@ const { isOpen = false, selectedProject = null } = Astro.props;
       <img 
         src={selectedProject.image} 
         alt={selectedProject.title}
-        class="w-full aspect-video object-cover rounded-lg mb-4"
+        class="max-h-[80vh] rounded-lg mb-4"
       />
       <h2 class="text-2xl font-bold text-white mb-4">{selectedProject.title}</h2>
       <p class="text-white/70">{selectedProject.description}</p>
@@ -48,7 +48,7 @@ const { isOpen = false, selectedProject = null } = Astro.props;
     
     if (project) {
       modal.innerHTML = `
-        <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-lg w-full m-4 relative">
+        <div class="bg-black/80 border border-teal-500/20 backdrop-blur-sm p-8 rounded-xl max-w-[90vw] w-auto m-4 relative">
           <button 
             onclick="document.dispatchEvent(new CustomEvent('closeModal'))"
             class="absolute top-4 right-4 text-white/70 hover:text-white"
@@ -58,7 +58,7 @@ const { isOpen = false, selectedProject = null } = Astro.props;
           <img 
             src="${project.image}" 
             alt="${project.title}"
-            class="w-full aspect-video object-cover rounded-lg mb-4"
+            class="max-h-[80vh] rounded-lg mb-4"
           />
           <h2 class="text-2xl font-bold text-white mb-4">${project.title}</h2>
           <p class="text-white/70">${project.description}</p>
@@ -69,9 +69,16 @@ const { isOpen = false, selectedProject = null } = Astro.props;
     }
   }
 
-  // Watch for attribute changes
-  const observer = new MutationObserver(updateModal);
   if (modal) {
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.dispatchEvent(new CustomEvent('closeModal'));
+      }
+    });
+
+    // Watch for attribute changes
+    const observer = new MutationObserver(updateModal);
     observer.observe(modal, { 
       attributes: true, 
       attributeFilter: ['data-open', 'data-project'] 

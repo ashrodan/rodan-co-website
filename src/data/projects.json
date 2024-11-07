@@ -13,5 +13,10 @@
     "title": "DCA - Donor Caller App",
     "description": "Assiting NFPs getting the most out of their calling campaigns/giving days.",
     "image": "/projects/dca.png"
+  },
+  {
+    "title": "OnShift",
+    "description": "Seamless shift rostering for local School.",
+    "image": "/projects/onshift.png"
   }
 ]
