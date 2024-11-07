@@ -1,13 +1,102 @@
 ---
 import projects from '../data/projects.json';
 ---
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-  {projects.map(project => (
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105" onClick={() => openModal(project)}>
-      <img src={project.image} alt={project.title} class="w-full h-48 object-cover" />
-      <div class="p-4">
-        <h2 class="text-xl font-semibold">{project.title}</h2>
+
+<div class="orbital-container relative w-full max-w-6xl mx-auto aspect-square md:mt-[-100px]">
+  <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+    <div class="w-4 h-4 bg-teal-400 rounded-full animate-pulse"></div>
+  </div>
+  
+  <div id="orbital-projects" class="absolute inset-0">
+    {projects.map((project, index) => (
+      <div 
+        class="project-card absolute w-64 md:w-72 bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl border border-teal-500/20 transition-all duration-500 hover:scale-105 cursor-pointer"
+        data-index={index}
+        data-total={projects.length}
+      >
+        <div class="aspect-video overflow-hidden">
+          <img 
+            src={project.image} 
+            alt={project.title}
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-white mb-2">{project.title}</h3>
+          <p class="text-white/70 text-sm">{project.description}</p>
+        </div>
       </div>
-    </div>
-  ))}
+    ))}
+  </div>
 </div>
+
+<script>
+function positionProjects() {
+  const container = document.getElementById('orbital-projects');
+  const cards = container?.querySelectorAll('.project-card');
+  const centerX = container?.clientWidth ? container.clientWidth / 2 : 0;
+  const centerY = container?.clientHeight ? container.clientHeight / 2 : 0;
+  
+  cards?.forEach((card) => {
+    const element = card as HTMLElement;
+    const index = parseInt(element.getAttribute('data-index') || '0');
+    const total = parseInt(element.getAttribute('data-total') || '1');
+    const angle = (index * 2 * Math.PI / total) + (Date.now() / 10000); // Slow rotation
+    const radius = Math.min(centerX, centerY) * 0.6;
+    
+    const x = centerX + radius * Math.cos(angle) - (element.clientWidth / 2);
+    const y = centerY + radius * Math.sin(angle) - (element.clientHeight / 2);
+    
+    element.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  
+  requestAnimationFrame(positionProjects);
+}
+
+// Handle mobile devices
+function initMobileLayout() {
+  if (window.innerWidth < 768) {
+    const container = document.getElementById('orbital-projects');
+    const cards = container?.querySelectorAll('.project-card');
+    
+    cards?.forEach((card) => {
+      const element = card as HTMLElement;
+      element.style.position = 'relative';
+      element.style.transform = 'none';
+      element.style.marginBottom = '1rem';
+    });
+    
+    if (container) {
+      const containerElement = container as HTMLElement;
+      containerElement.style.display = 'flex';
+      containerElement.style.flexDirection = 'column';
+      containerElement.style.alignItems = 'center';
+      containerElement.style.position = 'relative';
+      containerElement.style.paddingTop = '2rem';
+    }
+  } else {
+    positionProjects();
+  }
+}
+
+let resizeTimeout: number;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(initMobileLayout, 100) as unknown as number;
+});
+
+document.addEventListener('DOMContentLoaded', initMobileLayout);
+</script>
+
+<style>
+.orbital-container {
+  perspective: 1000px;
+}
+
+@media (max-width: 768px) {
+  .orbital-container {
+    aspect-ratio: auto;
+    height: auto;
+  }
+}
+</style>

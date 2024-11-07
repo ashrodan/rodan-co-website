@@ -1,12 +1,12 @@
 [
   {
-    "title": "Project One",
+    "title": "Wein Mediation",
     "description": "Description for project one.",
-    "image": "/path/to/image1.jpg"
+    "image": "/projects/wein-mediation.png"
   },
   {
-    "title": "Project Two",
+    "title": "Lilian Rodan",
     "description": "Description for project two.",
-    "image": "/path/to/image2.jpg"
+    "image": "/projects/lilian-rodan.png"
   }
 ]
