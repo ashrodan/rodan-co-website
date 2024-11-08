@@ -18,5 +18,10 @@
     "title": "OnShift",
     "description": "Seamless shift rostering for local School.",
     "image": "/projects/onshift.png"
+  },
+  {
+    "title": "J Combinator",
+    "description": "Animated website for J Combinator.",
+    "image": "/projects/jcombinator.png"
   }
 ]
