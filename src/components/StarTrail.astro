@@ -75,8 +75,8 @@ class Star {
 
     // Fade effect for trail stars
     if (this.baseX !== this.x) {
-      this.opacity -= 0.005;
-      this.size -= 0.02;
+      this.opacity = Math.max(0, this.opacity - 0.002);
+      this.size = Math.max(0.1, this.size - 0.01);
     }
   }
 }
@@ -84,16 +84,19 @@ class Star {
 class TrailStar extends Star {
   speed: number;
   angle: number;
+  lifetime: number;
 
   constructor(x: number, y: number) {
     super(x, y);
     this.speed = Math.random() * 0.5 + 0.1;
     this.angle = Math.random() * Math.PI * 2;
+    this.lifetime = 1; // Full lifetime
   }
 
   update(mouseX: number, mouseY: number) {
-    this.opacity -= 0.005;
-    this.size -= 0.02;
+    // Slower fade out
+    this.opacity = Math.max(0, this.opacity - 0.001);
+    this.size = Math.max(0.1, this.size - 0.005);
     
     // Add slight movement
     this.x += Math.cos(this.angle) * this.speed;
@@ -151,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isTouch) return;
     
     for (let i = 0; i < count; i++) {
-      const spread = isMoving ? 40 : 20;
+      const spread = isMoving ? 60 : 30;
       const offsetX = (Math.random() - 0.5) * spread;
       const offsetY = (Math.random() - 0.5) * spread;
       trailStars.push(new TrailStar(x + offsetX, y + offsetY));
@@ -159,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const animate = () => {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Reduced opacity for longer trail
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Update and draw background stars
@@ -178,21 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isTouch) {
       // Create trail stars based on mouse movement
       if (Math.abs(mouseX - lastX) > 1 || Math.abs(mouseY - lastY) > 1) {
-        createTrailStars(mouseX, mouseY, isMoving ? 5 : 2);
+        createTrailStars(mouseX, mouseY, isMoving ? 8 : 4);
         lastX = mouseX;
         lastY = mouseY;
         isMoving = true;
         clearTimeout(moveTimeout);
         moveTimeout = setTimeout(() => {
           isMoving = false;
-        }, 100) as unknown as number;
+        }, 200) as unknown as number; // Extended timeout
       }
 
       // Update and draw trail stars
       trailStars = trailStars.filter(star => {
         star.update(mouseX, mouseY);
         star.draw(ctx);
-        return star.opacity > 0 && star.size > 0;
+        return star.opacity > 0.01 && star.size > 0.1;
       });
     }
 
@@ -207,16 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Remove touch event listener completely
-  // document.addEventListener('touchmove', (e) => {
-  //   e.preventDefault();
-  //   mouseX = e.touches[0].clientX;
-  //   mouseY = e.touches[0].clientY;
-  // }, { passive: false });
-
   init();
   backgroundStars = createBackgroundStars();
   animate();
 });
 </script>
-
