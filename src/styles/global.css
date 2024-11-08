@@ -26,6 +26,51 @@
 }
 
 @layer base {
+  html, body {
+    @apply h-full w-full m-0 p-0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    @apply min-h-screen relative bg-[#0B1026] text-white;
+    overscroll-behavior-y: none;
+  }
+
+  main {
+    @apply relative z-10 w-full;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* Rest of the CSS remains the same as before */
+@keyframes aurora {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  25% {
+    transform: translate3d(10px, 10px, 0) rotate(1deg);
+  }
+  50% {
+    transform: translate3d(0, 20px, 0) rotate(0);
+  }
+  75% {
+    transform: translate3d(-10px, 10px, 0) rotate(-1deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.8; }
+}
+
+@layer base {
   html {
     @apply h-full m-0 p-0;
     -webkit-overflow-scrolling: touch;
