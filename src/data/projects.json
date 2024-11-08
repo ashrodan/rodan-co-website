@@ -23,5 +23,10 @@
     "title": "J Combinator",
     "description": "Animated website for J Combinator.",
     "image": "/projects/jcombinator.png"
+  },
+  {
+    "title": "Billies Payments",
+    "description": "Basketball team payment calculator and rostering.",
+    "image": "/projects/billies.png"
   }
 ]
