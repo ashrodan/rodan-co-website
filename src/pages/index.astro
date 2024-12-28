@@ -5,17 +5,12 @@ import PortfolioGrid from '../components/PortfolioGrid.astro';
 import Modal from '../components/Modal.astro';
 import StarTrail from '../components/StarTrail.astro';
 
-interface Project {
-  title: string;
-  description: string;
-  image: string;
-}
-
+// Preload critical assets
 const baseUrl = import.meta.env.SITE || Astro.url.origin;
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full" data-astro-preload>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -25,6 +20,10 @@ const baseUrl = import.meta.env.SITE || Astro.url.origin;
 
     <!-- Canonical URL -->
     <link rel="canonical" href={Astro.url.href} />
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/ar-profile-social.jpeg" as="image" />
+    <link rel="preload" href="/styles/global.css" as="style" />
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Ashley Rodan - Portfolio" />
@@ -55,39 +54,26 @@ const baseUrl = import.meta.env.SITE || Astro.url.origin;
       </div>
     </main>
 
-    <script>
-      interface Project {
-        title: string;
-        description: string;
-        image: string;
-      }
-
-      // Modal state management
-      let modalOpen = false;
-      let selectedProject: Project | null = null;
+    <script is:inline>
+      // Simplified modal management with reduced complexity
       const modalElement = document.querySelector('[data-modal]');
-
-      document.addEventListener('projectSelected', ((event: Event) => {
-        const customEvent = event as CustomEvent<Project>;
-        selectedProject = customEvent.detail;
-        modalOpen = true;
-        updateModalState();
-      }) as EventListener);
-
-      function closeModal() {
-        modalOpen = false;
-        selectedProject = null;
-        updateModalState();
-      }
-
-      function updateModalState() {
+      
+      function handleProjectSelection(event) {
+        const selectedProject = event.detail;
         if (modalElement) {
-          modalElement.setAttribute('data-open', modalOpen.toString());
+          modalElement.setAttribute('data-open', 'true');
           modalElement.setAttribute('data-project', JSON.stringify(selectedProject));
         }
       }
 
-      // Handle close event
+      function closeModal() {
+        if (modalElement) {
+          modalElement.setAttribute('data-open', 'false');
+          modalElement.setAttribute('data-project', 'null');
+        }
+      }
+
+      document.addEventListener('projectSelected', handleProjectSelection);
       document.addEventListener('closeModal', closeModal);
     </script>
   </body>

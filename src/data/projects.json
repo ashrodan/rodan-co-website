@@ -28,5 +28,15 @@
     "title": "Billies Payments",
     "description": "Basketball team payment calculator and rostering.",
     "image": "/projects/billies.png"
+  },
+  {
+    "title": "Zionism Victoria",
+    "description": "Linktree like website with some unique features.",
+    "image": "/projects/Zionism_Victoria.png"
+  },
+  {
+    "title": "Blanched Baby",
+    "description": "Recipes for Little and Big people.",
+    "image": "/projects/Blanched_Baby.png"
   }
 ]
